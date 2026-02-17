@@ -4,176 +4,319 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>GestionKo</title>
-    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        body { font-family: sans-serif; background: #f4f7fe; margin: 0; padding: 0; -webkit-font-smoothing: antialiased; }
-        .glass-card { background: #ffffff; border-radius: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 15px; padding: 20px; transition: 0.3s; }
-        .active-tab { display: block !important; animation: fadeIn 0.3s ease; }
-        .tab-content { display: none; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        /* CSS mivantana - Tsy mila Tailwind intsony */
+        body { 
+            font-family: Arial, sans-serif; 
+            background-color: #f0f2f5; 
+            margin: 0; 
+            padding: 0; 
+            color: #1a1a1a;
+        }
+
+        /* Loko manga ambony */
+        .header {
+            background-color: #4f46e5;
+            padding: 40px 20px 70px 20px;
+            border-bottom-left-radius: 40px;
+            border-bottom-right-radius: 40px;
+            color: white;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .header h1 { margin: 0; font-size: 26px; font-style: italic; }
+        .header .solde-label { font-size: 11px; opacity: 0.8; letter-spacing: 2px; text-transform: uppercase; margin-top: 15px; }
+        .header .balance { font-size: 36px; font-weight: 900; margin: 10px 0; }
+
+        /* Vata kely Miditra/Mivoaka */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .summary-box {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 12px;
+            border-radius: 20px;
+            backdrop-filter: blur(5px);
+        }
+        .text-green { color: #4ade80; font-weight: bold; }
+        .text-red { color: #f87171; font-weight: bold; }
+
+        /* Ny atiny */
+        .container { padding: 0 20px; margin-top: -40px; }
         
-        /* Navigation raikitra eo ambany */
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 70px; background: white; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #eee; z-index: 1000; }
-        .add-btn { background: #4f46e5; width: 55px; height: 55px; border-radius: 18px; color: white; display: flex; justify-content: center; align-items: center; font-size: 24px; margin-top: -30px; box-shadow: 0 10px 20px rgba(79, 70, 229, 0.3); }
+        .card {
+            background: white;
+            border-radius: 25px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        /* Ny sary boribory */
+        .chart-container {
+            position: relative;
+            width: 170px;
+            height: 170px;
+            margin: 0 auto;
+        }
+        .perc-label {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 22px;
+            font-weight: bold;
+            color: #4f46e5;
+        }
+
+        /* Lisitra */
+        .item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .item-info { display: flex; align-items: center; gap: 12px; }
+        .icon-box {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+        }
+
+        /* Navigasiona ambany */
+        .navbar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 75px;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border-top: 1px solid #ddd;
+            z-index: 1000;
+        }
+        .nav-item { text-align: center; color: #888; text-decoration: none; font-size: 10px; font-weight: bold; }
+        .nav-active { color: #4f46e5; }
+        
+        .btn-plus {
+            background: #4f46e5;
+            width: 60px;
+            height: 60px;
+            border-radius: 20px;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 30px;
+            margin-top: -40px;
+            box-shadow: 0 8px 20px rgba(79, 70, 229, 0.4);
+            border: none;
+        }
+
+        /* Modal (Popup) */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .modal-content {
+            background: white;
+            width: 100%;
+            border-radius: 30px;
+            padding: 30px;
+        }
+        input {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 15px;
+            border: 1px solid #eee;
+            background: #f9f9f9;
+            box-sizing: border-box;
+            outline: none;
+        }
+        .btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .btn-save { padding: 15px; border: none; border-radius: 15px; color: white; font-weight: bold; }
     </style>
 </head>
-<body class="pb-24">
+<body style="padding-bottom: 100px;">
 
-    <div style="background: #4f46e5; padding: 30px 20px 60px 20px; border-bottom-left-radius: 40px; border-bottom-right-radius: 40px; color: white; text-align: center;">
-        <h1 style="font-style: italic; font-weight: bold; font-size: 24px;">Gestion<span style="color: #fbbf24;">Ko</span></h1>
-        <p style="font-size: 10px; opacity: 0.7; letter-spacing: 2px; text-transform: uppercase; margin-top: 10px;">Solde General</p>
-        <h2 id="totalBal" style="font-size: 32px; font-weight: 900; margin: 5px 0;">0 Ar</h2>
+    <div class="header">
+        <h1>Gestion<span style="color: #fbbf24;">Ko</span></h1>
+        <div class="solde-label">Vola any am-pofoana</div>
+        <div class="balance" id="totalBal">0 Ar</div>
         
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px;">
-            <div style="background: rgba(255,255,255,0.1); padding: 10px; border-radius: 20px;">
-                <small style="font-size: 9px; opacity: 0.8;">MIDITRA</small>
-                <div id="totalIn" style="color: #86efac; font-weight: bold;">+ 0 Ar</div>
+        <div class="summary-grid">
+            <div class="summary-box">
+                <div style="font-size: 10px; opacity: 0.7;">MIDITRA</div>
+                <div id="totalIn" class="text-green">0 Ar</div>
             </div>
-            <div style="background: rgba(255,255,255,0.1); padding: 10px; border-radius: 20px;">
-                <small style="font-size: 9px; opacity: 0.8;">MIVOAKA</small>
-                <div id="totalOut" style="color: #fca5a5; font-weight: bold;">- 0 Ar</div>
+            <div class="summary-box">
+                <div style="font-size: 10px; opacity: 0.7;">MIVOAKA</div>
+                <div id="totalOut" class="text-red">0 Ar</div>
             </div>
         </div>
     </div>
 
-    <div style="padding: 0 20px; margin-top: -30px;">
-        <div id="view-home" class="tab-content active-tab">
-            <div class="glass-card" style="text-align: center;">
-                <div style="position: relative; width: 160px; height: 160px; margin: 0 auto;">
+    <div class="container">
+        <div id="home">
+            <div class="card" style="text-align: center;">
+                <div class="chart-container">
                     <canvas id="cercleChart"></canvas>
-                    <div id="percDisplay" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-weight: 900; font-size: 20px; color: #4f46e5;">0%</div>
+                    <div class="perc-label" id="percDisplay">0%</div>
                 </div>
             </div>
-            <h4 style="font-weight: bold; margin-bottom: 10px; color: #334155;">Transaction Vaovao</h4>
-            <div id="recentList"></div>
+            <h3 style="font-size: 16px; margin: 20px 0 10px 5px;">Transactions</h3>
+            <div id="list" class="card" style="padding: 0;"></div>
         </div>
 
-        <div id="view-history" class="tab-content">
-            <div class="glass-card">
-                <input type="date" id="searchDate" oninput="render()" style="width: 100%; border: none; outline: none; font-weight: bold; color: #4f46e5;">
+        <div id="history" style="display: none;">
+            <div class="card">
+                <label style="font-size: 12px; color: #888;">Hitady daty:</label>
+                <input type="date" id="searchDate" oninput="render()" style="margin-top: 5px;">
             </div>
-            <div id="fullHistory"></div>
+            <div id="histList" class="card" style="padding: 0;"></div>
         </div>
     </div>
 
-    <div style="text-align: center; margin-top: 20px; color: #94a3b8; font-size: 10px; font-weight: bold; letter-spacing: 2px;">
+    <div style="text-align: center; color: #ccc; font-size: 11px; margin-top: 20px;">
         CREATION BY MAHAITIA
     </div>
 
-    <div class="bottom-nav">
-        <div onclick="changeView('home')" style="text-align: center; color: #4f46e5;">
-            <i class="fas fa-home"></i><br><span style="font-size: 9px; font-weight: bold;">HOME</span>
+    <div class="navbar">
+        <div class="nav-item nav-active" id="btn-home" onclick="tab('home')">
+            <div style="font-size: 20px;">🏠</div>
+            HOME
         </div>
-        <div onclick="toggleModal()" class="add-btn">
-            <i class="fas fa-plus"></i>
-        </div>
-        <div onclick="changeView('history')" style="text-align: center; color: #94a3b8;">
-            <i class="fas fa-history"></i><br><span style="font-size: 9px; font-weight: bold;">HISTORY</span>
+        <button class="btn-plus" onclick="toggleModal()">+</button>
+        <div class="nav-item" id="btn-hist" onclick="tab('history')">
+            <div style="font-size: 20px;">📊</div>
+            HISTORY
         </div>
     </div>
 
-    <div id="modal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 2000; align-items: center; justify-content: center; padding: 20px;">
-        <div style="background: white; width: 100%; border-radius: 30px; padding: 30px;">
-            <h3 style="font-weight: bold; margin-bottom: 20px;">Transaction Vaovao</h3>
-            <input type="text" id="desc" placeholder="Inona ity?" style="width: 100%; padding: 15px; background: #f8fafc; border-radius: 15px; border: none; margin-bottom: 15px; outline: none;">
-            <input type="number" id="amt" placeholder="Vola (Ar)" style="width: 100%; padding: 15px; background: #f8fafc; border-radius: 15px; border: none; margin-bottom: 20px; outline: none; font-weight: bold;">
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                <button onclick="save('in')" style="background: #22c55e; color: white; padding: 15px; border-radius: 15px; border: none; font-weight: bold;">MIDITRA</button>
-                <button onclick="save('out')" style="background: #ef4444; color: white; padding: 15px; border-radius: 15px; border: none; font-weight: bold;">MIVOAKA</button>
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <h2 style="margin-top: 0;">Hampiditra</h2>
+            <input type="text" id="desc" placeholder="Inona ity? (ohatra: Karama)">
+            <input type="number" id="amt" placeholder="Vola firy? (Ar)">
+            <div class="btn-group">
+                <button class="btn-save" style="background: #22c55e;" onclick="add('in')">MIDITRA</button>
+                <button class="btn-save" style="background: #ef4444;" onclick="add('out')">MIVOAKA</button>
             </div>
-            <button onclick="toggleModal()" style="width: 100%; margin-top: 15px; color: #94a3b8; border: none; background: none; font-size: 12px;">HIVERINA</button>
+            <button onclick="toggleModal()" style="width: 100%; background: none; border: none; margin-top: 15px; color: #999;">HIVERINA</button>
         </div>
     </div>
 
     <script>
-        let db = JSON.parse(localStorage.getItem('maititia_db')) || [];
-        let myChart = null;
+        let data = JSON.parse(localStorage.getItem('gko_data')) || [];
+        let chart = null;
 
-        function changeView(v) {
-            document.getElementById('view-home').style.display = (v === 'home') ? 'block' : 'none';
-            document.getElementById('view-history').style.display = (v === 'history') ? 'block' : 'none';
+        function tab(t) {
+            document.getElementById('home').style.display = t === 'home' ? 'block' : 'none';
+            document.getElementById('history').style.display = t === 'history' ? 'block' : 'none';
+            document.getElementById('btn-home').classList.toggle('nav-active', t === 'home');
+            document.getElementById('btn-hist').classList.toggle('nav-active', t === 'history');
             render();
         }
 
         function toggleModal() {
-            const m = document.getElementById('modal');
-            m.style.display = (m.style.display === 'none' || m.style.display === '') ? 'flex' : 'none';
+            let m = document.getElementById('modal');
+            m.style.display = m.style.display === 'flex' ? 'none' : 'flex';
         }
 
-        function save(type) {
-            const d = document.getElementById('desc').value;
-            const a = document.getElementById('amt').value;
-            if(!d || !a) return;
-            const now = new Date();
-            db.unshift({
+        function add(type) {
+            let d = document.getElementById('desc').value;
+            let a = document.getElementById('amt').value;
+            if(!d || !a) return alert('Fenoy ny banga!');
+            
+            data.unshift({
+                id: Date.now(),
                 desc: d,
                 amt: parseFloat(a),
                 type: type,
-                date: now.toISOString().split('T')[0],
-                label: now.toLocaleDateString('mg-MG', {day:'2-digit', month:'short'})
+                date: new Date().toISOString().split('T')[0],
+                label: new Date().toLocaleDateString('mg-MG', {day:'2-digit', month:'short'})
             });
-            localStorage.setItem('maititia_db', JSON.stringify(db));
+            localStorage.setItem('gko_data', JSON.stringify(data));
             document.getElementById('desc').value = '';
             document.getElementById('amt').value = '';
             toggleModal();
             render();
         }
 
-        function del(i) {
-            if(confirm('Hofafana?')) { db.splice(i, 1); localStorage.setItem('maititia_db', JSON.stringify(db)); render(); }
+        function remove(id) {
+            if(confirm('Hofafana?')) {
+                data = data.filter(x => x.id !== id);
+                localStorage.setItem('gko_data', JSON.stringify(data));
+                render();
+            }
         }
 
         function render() {
-            const recent = document.getElementById('recentList');
-            const history = document.getElementById('fullHistory');
-            const search = document.getElementById('searchDate').value;
-            
-            recent.innerHTML = '';
-            history.innerHTML = '';
+            let l = document.getElementById('list');
+            let hl = document.getElementById('histList');
+            let sd = document.getElementById('searchDate').value;
+            l.innerHTML = ''; hl.innerHTML = '';
             let ti = 0, to = 0;
 
-            db.forEach((item, i) => {
-                const isIn = item.type === 'in';
-                if(isIn) ti += item.amt; else to += item.amt;
+            data.forEach((x, i) => {
+                const isIn = x.type === 'in';
+                if(isIn) ti += x.amt; else to += x.amt;
 
-                const card = `
-                    <div class="glass-card" style="display: flex; justify-content: space-between; align-items: center; padding: 15px;">
-                        <div style="display: flex; align-items: center; gap: 10px;">
-                            <div style="width: 35px; height: 35px; border-radius: 10px; background: ${isIn ? '#f0fdf4':'#fef2f2'}; color: ${isIn ? '#22c55e':'#ef4444'}; display: flex; align-items: center; justify-content: center; font-size: 12px;">
-                                <i class="fas ${isIn ? 'fa-arrow-down':'fa-arrow-up'}"></i>
+                let html = `
+                    <div class="item">
+                        <div class="item-info">
+                            <div class="icon-box" style="background: ${isIn?'#f0fdf4':'#fef2f2'}; color: ${isIn?'#22c55e':'#ef4444'};">
+                                ${isIn?'+':'-'}
                             </div>
                             <div>
-                                <div style="font-size: 13px; font-weight: bold;">${item.desc}</div>
-                                <div style="font-size: 9px; color: #94a3b8;">${item.label}</div>
+                                <div style="font-weight: bold; font-size: 14px;">${x.desc}</div>
+                                <div style="font-size: 10px; color: #aaa;">${x.label}</div>
                             </div>
                         </div>
-                        <div style="display: flex; align-items: center; gap: 10px;">
-                            <div style="font-weight: 900; color: ${isIn ? '#22c55e':'#ef4444'}; font-size: 14px;">${isIn?'+':'-'}${item.amt.toLocaleString()}</div>
-                            <i onclick="del(${i})" class="fas fa-trash" style="color: #eee; font-size: 12px;"></i>
+                        <div style="text-align: right; display: flex; align-items: center; gap: 10px;">
+                            <div style="font-weight: 900; color: ${isIn?'#22c55e':'#ef4444'}; font-size: 14px;">${x.amt.toLocaleString()}</div>
+                            <span onclick="remove(${x.id})" style="color: #ddd; font-size: 12px;">X</span>
                         </div>
                     </div>
                 `;
-                if(i < 5) recent.innerHTML += card;
-                if(!search || item.date === search) history.innerHTML += card;
+                if(i < 6) l.innerHTML += html;
+                if(!sd || x.date === sd) hl.innerHTML += html;
             });
 
             document.getElementById('totalBal').innerText = (ti - to).toLocaleString() + " Ar";
-            document.getElementById('totalIn').innerText = "+ " + ti.toLocaleString();
-            document.getElementById('totalOut').innerText = "- " + to.toLocaleString();
+            document.getElementById('totalIn').innerText = ti.toLocaleString() + " Ar";
+            document.getElementById('totalOut').innerText = to.toLocaleString() + " Ar";
             
-            const p = (ti + to) > 0 ? Math.round((ti / (ti + to)) * 100) : 0;
+            let p = (ti + to) > 0 ? Math.round((ti / (ti + to)) * 100) : 0;
             document.getElementById('percDisplay').innerText = p + "%";
             
             updateChart(ti, to);
         }
 
         function updateChart(ti, to) {
-            const ctx = document.getElementById('cercleChart').getContext('2d');
-            if(myChart) myChart.destroy();
-            myChart = new Chart(ctx, {
+            let ctx = document.getElementById('cercleChart').getContext('2d');
+            if(chart) chart.destroy();
+            chart = new Chart(ctx, {
                 type: 'doughnut',
                 data: {
                     datasets: [{
@@ -182,11 +325,11 @@
                         borderWidth: 0
                     }]
                 },
-                options: { cutout: '80%', plugins: { legend: { display: false } }, animation: { duration: 800 } }
+                options: { cutout: '80%', animation: { duration: 600 } }
             });
         }
 
-        window.onload = render;
+        render();
     </script>
 </body>
 </html>
