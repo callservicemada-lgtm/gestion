@@ -3,214 +3,227 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GestionKo Ultimate Table</title>
+    <title>GestionKo Custom Pro</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            --primary: #1e293b;
-            --blue: #3b82f6;
+            --primary: #0f172a;
+            --blue: #2563eb;
             --success: #10b981;
             --danger: #ef4444;
             --bg: #f8fafc;
+            --card: #ffffff;
         }
 
-        body { 
-            font-family: 'Segoe UI', Roboto, Helvetica, sans-serif;
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background-color: var(--bg);
-            margin: 0; padding: 0; color: #334155;
+            margin: 0; padding: 0;
+            color: var(--primary);
+            -webkit-font-smoothing: antialiased;
         }
 
         /* Blur Effect */
-        #main-app.blurred {
+        #main-app.is-blurred {
             filter: blur(15px);
-            transform: scale(0.97);
-            transition: 0.3s ease;
+            transform: scale(0.98);
+            transition: all 0.4s ease;
         }
 
-        /* Top Bar */
         .header {
-            background: var(--primary);
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
             color: white;
             padding: 50px 20px 80px;
             border-bottom-left-radius: 40px;
             border-bottom-right-radius: 40px;
             text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
         }
 
-        .balance-label { font-size: 11px; opacity: 0.7; letter-spacing: 2px; }
-        .balance-total { font-size: 38px; font-weight: 800; margin: 10px 0; color: #fff; }
+        .bal-value { font-size: 42px; font-weight: 800; margin: 10px 0; }
 
-        .stat-row {
+        .stat-grid {
             display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 25px;
         }
 
         .stat-card {
-            background: rgba(255,255,255,0.1);
-            padding: 12px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 15px; border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        /* Container */
-        .container { padding: 0 15px; margin-top: -45px; }
+        .content { padding: 0 18px; margin-top: -50px; }
 
-        /* Chart Card */
         .chart-card {
-            background: white; border-radius: 25px; padding: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-            display: flex; align-items: center; justify-content: space-around;
+            background: var(--card);
+            border-radius: 30px;
+            padding: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.03);
+            display: flex; align-items: center; justify-content: space-between;
         }
 
-        /* TABLEAU STYLE */
-        .table-container {
-            background: white; border-radius: 25px; overflow: hidden;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-top: 20px;
+        /* Tableau Styling */
+        .table-card {
+            background: var(--card);
+            border-radius: 30px;
+            margin-top: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.03);
         }
 
-        table { width: 100%; border-collapse: collapse; font-size: 14px; }
-        th { background: #f1f5f9; padding: 15px; text-align: left; font-weight: 600; color: #64748b; font-size: 12px; }
-        td { padding: 15px; border-bottom: 1px solid #f1f5f9; }
+        table { width: 100%; border-collapse: collapse; }
+        th { background: #f1f5f9; padding: 15px; text-align: left; font-size: 10px; color: #64748b; text-transform: uppercase; }
+        td { padding: 16px 15px; border-bottom: 1px solid #f8fafc; font-size: 14px; }
         
-        .type-indicator {
-            width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 8px;
+        .cat-tag {
+            font-size: 10px; font-weight: 700; background: #f1f5f9;
+            padding: 4px 8px; border-radius: 6px; color: var(--blue);
+            display: inline-block; margin-top: 4px;
         }
-
-        /* Modal Popup */
-        .overlay {
-            display: none; position: fixed; inset: 0; 
-            background: rgba(0,0,0,0.2); backdrop-filter: blur(10px);
-            z-index: 1000; align-items: center; justify-content: center; padding: 20px;
-        }
-
-        .modal {
-            background: white; width: 100%; border-radius: 30px; padding: 30px;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.1);
-            animation: popUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        input {
-            width: 100%; padding: 15px; margin-bottom: 15px; border-radius: 12px;
-            border: 1px solid #e2e8f0; background: #f8fafc; font-size: 16px; box-sizing: border-box;
-        }
-
-        .btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .btn {
-            padding: 15px; border: none; border-radius: 12px; color: white;
-            font-weight: bold; font-size: 14px; transition: 0.2s;
-        }
-        .btn:active { transform: scale(0.95); }
 
         /* Floating Button */
         .fab {
-            position: fixed; bottom: 30px; right: 30px;
-            width: 60px; height: 60px; background: var(--blue);
-            border-radius: 50%; color: white; border: none; font-size: 30px;
-            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.5); z-index: 900;
+            position: fixed; bottom: 30px; right: 25px;
+            width: 65px; height: 65px; background: var(--blue);
+            border-radius: 22px; color: white; border: none; font-size: 32px;
+            box-shadow: 0 15px 35px rgba(37, 99, 235, 0.4); z-index: 1000;
         }
 
-        @keyframes popUp { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        /* Modal Custom */
+        .overlay {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,0.3); backdrop-filter: blur(12px);
+            z-index: 2000; align-items: center; justify-content: center; padding: 20px;
+        }
+
+        .modal {
+            background: white; width: 100%; border-radius: 35px;
+            padding: 35px; box-shadow: 0 30px 60px rgba(0,0,0,0.2);
+            animation: slideIn 0.3s ease-out;
+        }
+
+        input {
+            width: 100%; padding: 18px; margin-bottom: 12px;
+            border-radius: 18px; border: 1px solid #e2e8f0;
+            background: #f8fafc; font-size: 16px; box-sizing: border-box; outline: none;
+        }
+
+        .btn-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+        .btn {
+            padding: 18px; border: none; border-radius: 18px;
+            font-weight: 800; color: white; font-size: 14px;
+        }
+
+        @keyframes slideIn { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
     </style>
 </head>
 <body>
 
     <div id="main-app">
         <div class="header">
-            <div style="font-weight: 900; font-size: 20px; margin-bottom: 20px;">GESTION<span style="color:var(--blue)">KO</span></div>
-            <div class="balance-label">SOLDE TOTAL</div>
-            <div class="balance-total" id="totalBal">0 Ar</div>
+            <div style="font-size: 11px; opacity: 0.6; letter-spacing: 2px;">SOLDE TOTAL</div>
+            <div class="bal-value" id="totalBal">0 Ar</div>
             
-            <div class="stat-row">
+            <div class="stat-grid">
                 <div class="stat-card">
-                    <div style="font-size: 10px; opacity: 0.7;">MIDITRA</div>
+                    <div style="font-size: 10px; opacity: 0.7; margin-bottom: 5px;">MIDITRA</div>
                     <div id="totalIn" style="color:var(--success); font-weight: 800;">0</div>
                 </div>
                 <div class="stat-card">
-                    <div style="font-size: 10px; opacity: 0.7;">MIVOAKA</div>
+                    <div style="font-size: 10px; opacity: 0.7; margin-bottom: 5px;">MIVOAKA</div>
                     <div id="totalOut" style="color:var(--danger); font-weight: 800;">0</div>
                 </div>
             </div>
         </div>
 
-        <div class="container">
+        <div class="content">
             <div class="chart-card">
                 <div style="width: 100px; height: 100px;">
                     <canvas id="myChart"></canvas>
                 </div>
                 <div style="text-align: right;">
-                    <div id="percDisplay" style="font-size: 24px; font-weight: 800; color: var(--primary);">0%</div>
-                    <div style="font-size: 10px; color: #94a3b8;">MIDITRA / TOTAL</div>
+                    <div id="percDisplay" style="font-size: 32px; font-weight: 900; color: var(--blue);">0%</div>
+                    <div style="font-size: 10px; color: #94a3b8; font-weight: 700;">GESTION PRO</div>
                 </div>
             </div>
 
-            <h4 style="margin: 25px 0 10px 5px; font-size: 16px;">Tantaran'ny Vola (Tableau)</h4>
-            <div class="table-container">
+            <h4 style="margin: 30px 0 15px 5px; font-size: 18px; font-weight: 800;">Transactions</h4>
+            
+            <div class="table-card">
                 <table>
                     <thead>
                         <tr>
-                            <th>DATY</th>
-                            <th>ANARANA</th>
-                            <th style="text-align: right;">VOLA</th>
+                            <th>Antsipiriany</th>
+                            <th style="text-align: right;">Vola</th>
                         </tr>
                     </thead>
                     <tbody id="tableBody">
                         </tbody>
                 </table>
             </div>
-            <div style="height: 100px;"></div> </div>
+        </div>
+        <div style="height: 100px;"></div>
     </div>
 
-    <button class="fab" onclick="openModal()">+</button>
+    <button class="fab" onclick="toggleModal(true)">+</button>
 
-    <div class="overlay" id="modalOverlay">
+    <div class="overlay" id="modalOverlay" onclick="if(event.target==this)toggleModal(false)">
         <div class="modal">
-            <h3 style="margin-top: 0; margin-bottom: 20px;">Transaction Vaovao</h3>
-            <input type="text" id="desc" placeholder="Inona ity?">
+            <h3 style="margin-top: 0; margin-bottom: 20px; font-weight: 900;">Hanampy Transaction</h3>
+            
+            <input type="text" id="desc" placeholder="Anarany (ohatra: Karama)">
+            <input type="text" id="cat" placeholder="Sokajy (ohatra: Sakafo, Jiro...)">
             <input type="number" id="amt" placeholder="Vola (Ar)" inputmode="numeric">
-            <div class="btn-group">
-                <button class="btn" style="background: var(--success);" onclick="save('in')">MIDITRA</button>
-                <button class="btn" style="background: var(--danger);" onclick="save('out')">MIVOAKA</button>
+            
+            <div class="btn-row">
+                <button class="btn" style="background: var(--success);" onclick="add('in')">MIDITRA</button>
+                <button class="btn" style="background: var(--danger);" onclick="add('out')">MIVOAKA</button>
             </div>
-            <button onclick="closeModal()" style="width: 100%; background: none; border: none; margin-top: 15px; color: #94a3b8; font-weight: bold;">HIVERINA</button>
+            
+            <p onclick="toggleModal(false)" style="text-align: center; color: #94a3b8; font-weight: 700; margin-top: 20px; font-size: 13px;">HIVERINA</p>
         </div>
     </div>
 
     <script>
-        let db = JSON.parse(localStorage.getItem('gko_table_db')) || [];
+        let db = JSON.parse(localStorage.getItem('gko_custom_v1')) || [];
         let chart = null;
 
-        function openModal() {
-            document.getElementById('modalOverlay').style.display = 'flex';
-            document.getElementById('main-app').classList.add('blurred');
+        function toggleModal(s) {
+            const m = document.getElementById('modalOverlay');
+            const a = document.getElementById('main-app');
+            m.style.display = s ? 'flex' : 'none';
+            if(s) a.classList.add('is-blurred'); else a.classList.remove('is-blurred');
         }
 
-        function closeModal() {
-            document.getElementById('modalOverlay').style.display = 'none';
-            document.getElementById('main-app').classList.remove('blurred');
-        }
-
-        function save(type) {
+        function add(type) {
             const d = document.getElementById('desc').value;
+            const c = document.getElementById('cat').value || 'Hafa';
             const a = document.getElementById('amt').value;
-            if(!d || !a) return;
+
+            if(!d || !a) return alert('Fenoy ny anarany sy ny vola!');
 
             db.unshift({
                 id: Date.now(),
                 desc: d,
+                cat: c,
                 amt: parseFloat(a),
                 type: type,
                 date: new Date().toLocaleDateString('mg-MG', {day:'2-digit', month:'short'})
             });
 
-            localStorage.setItem('gko_table_db', JSON.stringify(db));
+            localStorage.setItem('gko_custom_v1', JSON.stringify(db));
             document.getElementById('desc').value = '';
+            document.getElementById('cat').value = '';
             document.getElementById('amt').value = '';
-            closeModal();
+            toggleModal(false);
             render();
         }
 
         function remove(id) {
             if(confirm('Hofafana ity?')) {
                 db = db.filter(x => x.id !== id);
-                localStorage.setItem('gko_table_db', JSON.stringify(db));
+                localStorage.setItem('gko_custom_v1', JSON.stringify(db));
                 render();
             }
         }
@@ -218,18 +231,18 @@
         function render() {
             const tbody = document.getElementById('tableBody');
             tbody.innerHTML = '';
-            let tIn = 0, tOut = 0;
+            let ti = 0, to = 0;
 
             db.forEach(item => {
                 const isIn = item.type === 'in';
-                if(isIn) tIn += item.amt; else tOut += item.amt;
+                if(isIn) ti += item.amt; else to += item.amt;
 
                 tbody.innerHTML += `
                     <tr onclick="remove(${item.id})">
-                        <td style="color: #94a3b8; font-size: 11px;">${item.date}</td>
-                        <td style="font-weight: 600;">
-                            <span class="type-indicator" style="background: ${isIn ? 'var(--success)' : 'var(--danger)'}"></span>
-                            ${item.desc}
+                        <td>
+                            <div style="font-weight: 700;">${item.desc}</div>
+                            <div class="cat-tag">${item.cat}</div>
+                            <span style="font-size: 10px; color: #94a3b8; margin-left: 5px;">${item.date}</span>
                         </td>
                         <td style="text-align: right; font-weight: 800; color: ${isIn ? 'var(--success)' : 'var(--danger)'}">
                             ${isIn ? '+' : '-'} ${item.amt.toLocaleString()}
@@ -238,12 +251,12 @@
                 `;
             });
 
-            document.getElementById('totalBal').innerText = (tIn - tOut).toLocaleString() + " Ar";
-            document.getElementById('totalIn').innerText = tIn.toLocaleString();
-            document.getElementById('totalOut').innerText = tOut.toLocaleString();
-            document.getElementById('percDisplay').innerText = (tIn + tOut) > 0 ? Math.round((tIn / (tIn + tOut)) * 100) + "%" : "0%";
+            document.getElementById('totalBal').innerText = (ti - to).toLocaleString() + " Ar";
+            document.getElementById('totalIn').innerText = ti.toLocaleString();
+            document.getElementById('totalOut').innerText = to.toLocaleString();
+            document.getElementById('percDisplay').innerText = (ti + to) > 0 ? Math.round((ti / (ti + to)) * 100) + "%" : "0%";
             
-            updateChart(tIn, tOut);
+            updateChart(ti, to);
         }
 
         function updateChart(ti, to) {
@@ -255,7 +268,8 @@
                     datasets: [{
                         data: [ti || 1, to || 0.001],
                         backgroundColor: ['#10b981', '#ef4444'],
-                        borderWidth: 0
+                        borderWidth: 0,
+                        borderRadius: 6
                     }]
                 },
                 options: { cutout: '80%', plugins: { legend: { display: false } } }
