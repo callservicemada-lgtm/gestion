@@ -3,317 +3,242 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MyBiz Manager Pro</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <title>GestionKo by Mahaitia</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <style>
-        :root {
-            --primary: #6366f1;
-            --secondary: #a855f7;
-            --success: #22c55e;
-            --danger: #ef4444;
-            --bg: #f1f5f9;
-            --card: #ffffff;
-            --text: #1e293b;
-            --glass: rgba(255, 255, 255, 0.85);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-        }
-
-        body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 10px;
-        }
-
-        .app-shell {
-            width: 100%;
-            max-width: 450px;
-            height: 90vh;
-            background: var(--glass);
-            backdrop-filter: blur(15px);
-            border-radius: 30px;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-
-        /* HEADER */
-        header {
-            padding: 25px 20px;
-            text-align: center;
-            background: white;
-            border-bottom: 1px solid #e2e8f0;
-        }
-
-        header h1 {
-            font-size: 1.4rem;
-            color: var(--primary);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        /* NAVIGATION */
-        nav {
-            display: flex;
-            padding: 10px 20px;
-            gap: 10px;
-        }
-
-        .nav-btn {
-            flex: 1;
-            padding: 12px;
-            border: none;
-            border-radius: 15px;
-            background: #e2e8f0;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            color: #64748b;
-        }
-
-        .nav-btn.active {
-            background: var(--primary);
-            color: white;
-            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
-            transform: translateY(-2px);
-        }
-
-        /* CONTENT AREA */
-        .content {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px;
-            scrollbar-width: none;
-        }
-
-        .content::-webkit-scrollbar { display: none; }
-
-        .section {
-            display: none;
-            animation: slideUp 0.5s ease;
-        }
-
-        .section.active { display: block; }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* CARDS & INPUTS */
-        .card {
-            background: white;
-            padding: 20px;
-            border-radius: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
-        }
-
-        .balance-card {
-            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
-            color: white;
-            text-align: center;
-        }
-
-        .balance-card h2 { font-size: 2rem; margin: 10px 0; }
-
-        input {
-            width: 100%;
-            padding: 12px 15px;
-            margin: 8px 0;
-            border: 2px solid #f1f5f9;
-            border-radius: 12px;
-            outline: none;
-            transition: 0.3s;
-        }
-
-        input:focus { border-color: var(--primary); }
-
-        .btn-main {
-            width: 100%;
-            padding: 12px;
-            border: none;
-            border-radius: 12px;
-            color: white;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.2s;
-            margin-top: 10px;
-        }
-
-        .btn-primary { background: var(--primary); }
-        .btn-success { background: var(--success); }
-        .btn-danger { background: var(--danger); }
-
-        .btn-main:active { transform: scale(0.97); }
-
-        /* LISTS */
-        .list-item {
-            background: white;
-            padding: 15px;
-            border-radius: 15px;
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            animation: fadeIn 0.4s ease;
-            border-left: 5px solid var(--primary);
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; scale: 0.9; }
-            to { opacity: 1; scale: 1; }
-        }
-
-        .delete-btn {
-            color: var(--danger);
-            cursor: pointer;
-            padding: 5px;
-        }
-
-        .finance-row {
-            display: flex;
-            gap: 10px;
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap');
+        body { font-family: 'Outfit', sans-serif; background: #f4f7fe; color: #1e293b; }
+        
+        .glass-card { background: rgba(255, 255, 255, 0.95); border-radius: 30px; border: 1px solid rgba(255,255,255,0.5); box-shadow: 0 10px 25px -5px rgba(0,0,0,0.04); transition: 0.3s; }
+        .glass-card:active { transform: scale(0.98); }
+        
+        .tab-content { display: none; animation: fadeIn 0.4s ease-out; }
+        .active-tab { display: block; }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .nav-icon { transition: 0.3s; color: #94a3b8; }
+        .active-nav .nav-icon { color: #4f46e5; transform: translateY(-5px); }
+        .active-nav span { color: #4f46e5; font-weight: 700; }
     </style>
 </head>
-<body>
+<body class="pb-32">
 
-    <div class="app-shell">
-        <header>
-            <h1><i class="fas fa-rocket"></i> MyBiz Manager</h1>
-        </header>
+    <div class="bg-indigo-600 pt-10 pb-20 px-6 rounded-b-[45px] text-white shadow-2xl relative">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-2xl font-extrabold italic tracking-tight">Gestion<span class="text-yellow-400">Ko</span></h1>
+            <div class="bg-white/10 px-3 py-1 rounded-full text-[10px] font-bold border border-white/20">PRO v3</div>
+        </div>
+        
+        <div class="text-center mb-6">
+            <p class="text-[10px] uppercase tracking-[0.2em] opacity-60">Solde General</p>
+            <h2 id="totalBal" class="text-4xl font-black">0 Ar</h2>
+        </div>
 
-        <nav>
-            <button class="nav-btn active" onclick="tab('stock', this)">
-                <i class="fas fa-boxes-stacked"></i> Stock
-            </button>
-            <button class="nav-btn" onclick="tab('finance', this)">
-                <i class="fas fa-wallet"></i> Finance
-            </button>
-        </nav>
-
-        <div class="content">
-            <div id="stock" class="section active">
-                <div class="card">
-                    <input type="text" id="itemName" placeholder="Anaran'ny entana...">
-                    <input type="number" id="itemQty" placeholder="Isany (Qty)...">
-                    <button class="btn-main btn-primary" onclick="addStock()">
-                        <i class="fas fa-plus"></i> Ampiana amin'ny Stock
-                    </button>
-                </div>
-                <div id="stockList"></div>
+        <div class="grid grid-cols-2 gap-4">
+            <div class="bg-white/10 backdrop-blur-md p-4 rounded-3xl border border-white/10 shadow-inner">
+                <p class="text-[9px] uppercase font-bold opacity-60">Miditra</p>
+                <p id="totalIn" class="text-sm font-bold text-green-300 tracking-wide">+ 0 Ar</p>
             </div>
-
-            <div id="finance" class="section">
-                <div class="card balance-card">
-                    <p>Totaly Vola Am-pitoerana</p>
-                    <h2 id="balance">0 Ar</h2>
-                </div>
-                <div class="card">
-                    <input type="number" id="amount" placeholder="Sandam-bola (Ar)...">
-                    <div class="finance-row">
-                        <button class="btn-main btn-success" onclick="updateFinance('in')">
-                            <i class="fas fa-arrow-down"></i> Miditra
-                        </button>
-                        <button class="btn-main btn-danger" onclick="updateFinance('out')">
-                            <i class="fas fa-arrow-up"></i> Mivoaka
-                        </button>
-                    </div>
-                </div>
+            <div class="bg-white/10 backdrop-blur-md p-4 rounded-3xl border border-white/10 shadow-inner">
+                <p class="text-[9px] uppercase font-bold opacity-60">Mivoaka</p>
+                <p id="totalOut" class="text-sm font-bold text-red-300 tracking-wide">- 0 Ar</p>
             </div>
         </div>
     </div>
 
-    <script>
-        // DATA STORAGE
-        let stocks = JSON.parse(localStorage.getItem('myBiz_stocks')) || [];
-        let balance = JSON.parse(localStorage.getItem('myBiz_balance')) || 0;
-
-        // INITIALIZE
-        window.onload = () => {
-            renderStock();
-            renderFinance();
-        };
-
-        // NAVIGATION LOGIC
-        function tab(id, btn) {
-            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            btn.classList.add('active');
-        }
-
-        // STOCK LOGIC
-        function addStock() {
-            const name = document.getElementById('itemName').value;
-            const qty = document.getElementById('itemQty').value;
-
-            if(!name || !qty) return alert("Fenoy tsara ny banga!");
-
-            stocks.push({ id: Date.now(), name, qty });
-            saveData();
-            renderStock();
-            
-            document.getElementById('itemName').value = '';
-            document.getElementById('itemQty').value = '';
-        }
-
-        function deleteStock(id) {
-            stocks = stocks.filter(s => s.id !== id);
-            saveData();
-            renderStock();
-        }
-
-        function renderStock() {
-            const list = document.getElementById('stockList');
-            list.innerHTML = stocks.map(s => `
-                <div class="list-item">
-                    <div>
-                        <strong>${s.name}</strong><br>
-                        <small style="color:#64748b">Isany: ${s.qty}</small>
-                    </div>
-                    <i class="fas fa-trash delete-btn" onclick="deleteStock(${s.id})"></i>
+    <main class="px-6 -mt-10 relative z-20">
+        
+        <div id="view-home" class="tab-content active-tab space-y-6">
+            <div class="glass-card p-6 text-center">
+                <h3 class="text-left font-bold text-gray-400 text-[10px] uppercase mb-4 tracking-widest">Sary Boribory (Stats)</h3>
+                <div class="relative w-44 h-44 mx-auto">
+                    <canvas id="cercleChart"></canvas>
+                    <div id="percDisplay" class="absolute inset-0 flex items-center justify-center font-black text-indigo-600 text-xl">0%</div>
                 </div>
-            `).join('');
+            </div>
+
+            <div class="space-y-4">
+                <h3 class="font-bold text-slate-800 px-2">Transaction Vaovao</h3>
+                <div id="recentList" class="space-y-3"></div>
+            </div>
+        </div>
+
+        <div id="view-history" class="tab-content space-y-4">
+            <div class="glass-card p-4 flex items-center gap-4 mb-6 shadow-indigo-100">
+                <i class="fas fa-search text-indigo-500"></i>
+                <input type="date" id="searchDate" oninput="render()" class="w-full bg-transparent outline-none font-bold text-slate-600">
+            </div>
+            
+            <h3 class="font-bold text-slate-800 px-2">Tantaran'ny Transaction Rehetra</h3>
+            <div id="fullHistory" class="space-y-3"></div>
+        </div>
+    </main>
+
+    <div class="text-center mt-8 mb-4">
+        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.3em]">Creation by Mahaitia</p>
+    </div>
+
+    <nav class="fixed bottom-0 left-0 right-0 h-20 bg-white shadow-[0_-10px_30px_rgba(0,0,0,0.03)] flex justify-around items-center px-10 z-[100] rounded-t-[35px] border-t border-gray-100">
+        <button onclick="changeView('home')" id="nav-home" class="flex flex-col items-center active-nav">
+            <i class="fas fa-th-large text-xl nav-icon"></i>
+            <span class="text-[9px] mt-1 font-bold">HOME</span>
+        </button>
+        
+        <button onclick="toggleModal()" class="w-14 h-14 bg-indigo-600 text-white rounded-2xl flex items-center justify-center text-xl -mt-16 shadow-xl shadow-indigo-200 active:scale-90 transition">
+            <i class="fas fa-plus"></i>
+        </button>
+
+        <button onclick="changeView('history')" id="nav-history" class="flex flex-col items-center">
+            <i class="fas fa-history text-xl nav-icon"></i>
+            <span class="text-[9px] mt-1 font-bold">HISTORY</span>
+        </button>
+    </nav>
+
+    <div id="modal" class="fixed inset-0 bg-slate-900/60 hidden items-center justify-center p-6 z-[200] backdrop-blur-md">
+        <div class="bg-white w-full max-w-sm rounded-[40px] p-8 shadow-2xl animate-fadeIn">
+            <h2 class="text-2xl font-black text-slate-800 mb-6 tracking-tight">Hampiditra</h2>
+            <div class="space-y-4">
+                <input type="text" id="desc" placeholder="Inona ity?" class="w-full p-4 bg-slate-50 rounded-2xl outline-none focus:ring-2 ring-indigo-400 font-bold">
+                <input type="number" id="amt" placeholder="Vola (Ar)" class="w-full p-4 bg-slate-50 rounded-2xl outline-none focus:ring-2 ring-indigo-400 font-black text-2xl text-indigo-600">
+                <div class="grid grid-cols-2 gap-4">
+                    <button onclick="save('in')" class="bg-green-500 text-white py-4 rounded-2xl font-bold active:scale-95 transition">MIDITRA</button>
+                    <button onclick="save('out')" class="bg-red-500 text-white py-4 rounded-2xl font-bold active:scale-95 transition">MIVOAKA</button>
+                </div>
+            </div>
+            <button onclick="toggleModal()" class="w-full mt-6 text-slate-400 font-bold text-xs">HIVERINA</button>
+        </div>
+    </div>
+
+    <script>
+        let db = JSON.parse(localStorage.getItem('maititia_db')) || [];
+        let myChart;
+
+        function changeView(view) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active-tab'));
+            document.getElementById('view-' + view).classList.add('active-tab');
+            
+            document.getElementById('nav-home').classList.toggle('active-nav', view === 'home');
+            document.getElementById('nav-history').classList.toggle('active-nav', view === 'history');
         }
 
-        // FINANCE LOGIC
-        function updateFinance(type) {
-            const val = parseFloat(document.getElementById('amount').value);
-            if(isNaN(val)) return alert("Ampidiro ny vola!");
-
-            if(type === 'in') balance += val;
-            else balance -= val;
-
-            saveData();
-            renderFinance();
-            document.getElementById('amount').value = '';
+        function toggleModal() {
+            const m = document.getElementById('modal');
+            m.classList.toggle('hidden');
+            m.classList.toggle('flex');
         }
 
-        function renderFinance() {
-            const el = document.getElementById('balance');
-            el.innerText = balance.toLocaleString() + " Ar";
-            el.style.color = balance >= 0 ? "#22c55e" : "#ef4444";
+        function save(type) {
+            const desc = document.getElementById('desc').value;
+            const amt = document.getElementById('amt').value;
+            if(!desc || !amt) return;
+
+            const dateObj = new Date();
+            const dateStr = dateObj.toISOString().split('T')[0];
+            const label = dateObj.toLocaleDateString('mg-MG', {day:'2-digit', month:'short'});
+
+            db.unshift({ desc, amt: parseFloat(amt), type, dateStr, label });
+            localStorage.setItem('maititia_db', JSON.stringify(db));
+            
+            document.getElementById('desc').value = '';
+            document.getElementById('amt').value = '';
+            toggleModal();
+            render();
         }
 
-        // PERSISTENCE
-        function saveData() {
-            localStorage.setItem('myBiz_stocks', JSON.stringify(stocks));
-            localStorage.setItem('myBiz_balance', JSON.stringify(balance));
+        function deleteItem(i) {
+            if(confirm('Hofafana ity tantara ity?')) {
+                db.splice(i, 1);
+                localStorage.setItem('maititia_db', JSON.stringify(db));
+                render();
+            }
         }
+
+        function render() {
+            const recentBox = document.getElementById('recentList');
+            const historyBox = document.getElementById('fullHistory');
+            const searchVal = document.getElementById('searchDate').value;
+            
+            let filtered = searchVal ? db.filter(x => x.dateStr === searchVal) : db;
+
+            let ti = 0, to = 0;
+            recentBox.innerHTML = '';
+            historyBox.innerHTML = '';
+
+            // Render Recent (Home - 5 items)
+            db.slice(0, 5).forEach((item, i) => {
+                recentBox.innerHTML += createCard(item, i);
+            });
+
+            // Render History (All or filtered)
+            filtered.forEach((item, i) => {
+                const isIn = item.type === 'in';
+                if(!searchVal) { isIn ? ti += item.amt : to += item.amt; }
+                else { isIn ? ti += item.amt : to += item.amt; } // Filtered totals
+                historyBox.innerHTML += createCard(item, i);
+            });
+
+            // Update Totals from DB (Overall)
+            let totalIn = 0, totalOut = 0;
+            db.forEach(x => { x.type === 'in' ? totalIn += x.amt : totalOut += x.amt; });
+
+            document.getElementById('totalBal').innerText = (totalIn - totalOut).toLocaleString() + " Ar";
+            document.getElementById('totalIn').innerText = "+ " + totalIn.toLocaleString() + " Ar";
+            document.getElementById('totalOut').innerText = "- " + totalOut.toLocaleString() + " Ar";
+            
+            const perc = (totalIn + totalOut) > 0 ? Math.round((totalIn / (totalIn + totalOut)) * 100) : 0;
+            document.getElementById('percDisplay').innerText = perc + "%";
+            
+            updateChart(totalIn, totalOut);
+        }
+
+        function createCard(item, i) {
+            const isIn = item.type === 'in';
+            return `
+                <div class="glass-card p-5 flex justify-between items-center animate-fadeIn">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-2xl ${isIn ? 'bg-green-50 text-green-500' : 'bg-red-50 text-red-500'} flex items-center justify-center shadow-inner">
+                            <i class="fas ${isIn ? 'fa-plus' : 'fa-minus'}"></i>
+                        </div>
+                        <div>
+                            <p class="font-bold text-slate-800 text-sm">${item.desc}</p>
+                            <p class="text-[9px] font-black text-slate-300 uppercase tracking-widest">${item.label}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <p class="font-black ${isIn ? 'text-green-500' : 'text-red-500'}">${isIn?'+':'-'} ${item.amt.toLocaleString()}</p>
+                        <button onclick="deleteItem(${i})" class="text-slate-200 hover:text-red-400"><i class="fas fa-trash-alt"></i></button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function updateChart(ti, to) {
+            const ctx = document.getElementById('cercleChart').getContext('2d');
+            if(myChart) myChart.destroy();
+            myChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    datasets: [{
+                        data: [ti, to],
+                        backgroundColor: ['#22c55e', '#ef4444'],
+                        borderWidth: 0,
+                        borderRadius: 15
+                    }]
+                },
+                options: {
+                    cutout: '85%',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    animation: { animateScale: true, animateRotate: true }
+                }
+            });
+        }
+
+        render();
     </script>
 </body>
 </html>
