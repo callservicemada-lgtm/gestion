@@ -2,239 +2,244 @@
 <html lang="mg">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GestionKo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>GestionKo PRO</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
     <style>
-        /* CSS mivantana - Tsy mila Tailwind intsony */
-        body { 
-            font-family: Arial, sans-serif; 
-            background-color: #f0f2f5; 
-            margin: 0; 
-            padding: 0; 
-            color: #1a1a1a;
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #fbbf24;
+            --success: #22c55e;
+            --danger: #ef4444;
+            --bg: #f8fafc;
         }
 
-        /* Loko manga ambony */
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            margin: 0;
+            padding: 0;
+            color: #1e293b;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Header Modern miaraka amin'ny Gradient */
         .header {
-            background-color: #4f46e5;
-            padding: 40px 20px 70px 20px;
-            border-bottom-left-radius: 40px;
-            border-bottom-right-radius: 40px;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, #818cf8 100%);
+            padding: env(safe-area-inset-top) 25px 80px 25px;
+            border-bottom-left-radius: 45px;
+            border-bottom-right-radius: 45px;
             color: white;
             text-align: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 25px rgba(79, 70, 229, 0.3);
         }
 
-        .header h1 { margin: 0; font-size: 26px; font-style: italic; }
-        .header .solde-label { font-size: 11px; opacity: 0.8; letter-spacing: 2px; text-transform: uppercase; margin-top: 15px; }
-        .header .balance { font-size: 36px; font-weight: 900; margin: 10px 0; }
+        .header h1 { 
+            margin: 20px 0 0 0; 
+            font-size: 28px; 
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
 
-        /* Vata kely Miditra/Mivoaka */
-        .summary-grid {
+        .balance-card {
+            margin-top: 25px;
+            animation: fadeIn 0.8s ease;
+        }
+
+        .balance-label { font-size: 12px; opacity: 0.8; text-transform: uppercase; letter-spacing: 1.5px; }
+        .balance-amount { font-size: 42px; font-weight: 900; margin: 5px 0; }
+
+        .summary-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 15px;
-            margin-top: 20px;
+            margin-top: 25px;
         }
-        .summary-box {
+
+        .summary-item {
             background: rgba(255, 255, 255, 0.15);
-            padding: 12px;
-            border-radius: 20px;
-            backdrop-filter: blur(5px);
+            backdrop-filter: blur(10px);
+            padding: 15px;
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
-        .text-green { color: #4ade80; font-weight: bold; }
-        .text-red { color: #f87171; font-weight: bold; }
 
-        /* Ny atiny */
-        .container { padding: 0 20px; margin-top: -40px; }
+        /* Container & Cards */
+        .main-container { padding: 0 20px; margin-top: -50px; }
         
-        .card {
+        .glass-card {
             background: white;
-            border-radius: 25px;
-            padding: 20px;
+            border-radius: 30px;
+            padding: 25px;
             margin-bottom: 20px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.04);
+            border: 1px solid rgba(255, 255, 255, 0.7);
         }
 
-        /* Ny sary boribory */
-        .chart-container {
-            position: relative;
-            width: 170px;
-            height: 170px;
-            margin: 0 auto;
+        /* Chart styling */
+        .chart-box { position: relative; width: 180px; height: 180px; margin: 0 auto; }
+        .chart-center {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            text-align: center;
         }
-        .perc-label {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 22px;
-            font-weight: bold;
-            color: #4f46e5;
-        }
+        .perc-val { font-size: 24px; font-weight: 900; color: var(--primary-dark); }
 
-        /* Lisitra */
-        .item {
+        /* List Items */
+        .list-header { display: flex; justify-content: space-between; align-items: center; margin: 25px 10px 15px; }
+        .list-header h3 { margin: 0; font-size: 18px; font-weight: 700; }
+        
+        .transaction-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px;
-            border-bottom: 1px solid #f0f0f0;
+            padding: 16px;
+            background: white;
+            border-radius: 22px;
+            margin-bottom: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+            transition: transform 0.2s;
         }
-        .item-info { display: flex; align-items: center; gap: 12px; }
-        .icon-box {
-            width: 40px;
-            height: 40px;
-            border-radius: 12px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-weight: bold;
+        .transaction-item:active { transform: scale(0.97); }
+
+        .icon-circle {
+            width: 48px; height: 48px; border-radius: 16px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 20px; font-weight: bold;
         }
 
-        /* Navigasiona ambany */
-        .navbar {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 75px;
-            background: white;
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            border-top: 1px solid #ddd;
+        /* Navigation Bar */
+        .bottom-bar {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            height: 85px; background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(20px);
+            display: flex; justify-content: space-around; align-items: center;
+            padding-bottom: env(safe-area-inset-bottom);
+            border-top: 1px solid rgba(0,0,0,0.05);
             z-index: 1000;
         }
-        .nav-item { text-align: center; color: #888; text-decoration: none; font-size: 10px; font-weight: bold; }
-        .nav-active { color: #4f46e5; }
-        
-        .btn-plus {
-            background: #4f46e5;
-            width: 60px;
-            height: 60px;
-            border-radius: 20px;
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 30px;
-            margin-top: -40px;
-            box-shadow: 0 8px 20px rgba(79, 70, 229, 0.4);
-            border: none;
-        }
 
-        /* Modal (Popup) */
+        .nav-btn { text-align: center; color: #94a3b8; font-size: 10px; font-weight: 700; transition: 0.3s; }
+        .nav-btn.active { color: var(--primary-dark); }
+        .nav-btn i { font-size: 24px; display: block; margin-bottom: 4px; }
+
+        .fab-add {
+            width: 65px; height: 65px; background: var(--primary-dark);
+            border-radius: 22px; color: white; border: none;
+            font-size: 30px; margin-top: -50px;
+            box-shadow: 0 10px 25px rgba(79, 70, 229, 0.4);
+            display: flex; align-items: center; justify-content: center;
+            transition: 0.3s ease;
+        }
+        .fab-add:active { transform: scale(0.85) rotate(90deg); }
+
+        /* Modal Custom */
         .modal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.6);
-            z-index: 2000;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
+            display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.5);
+            backdrop-filter: blur(8px); z-index: 2000; align-items: flex-end;
         }
         .modal-content {
-            background: white;
-            width: 100%;
-            border-radius: 30px;
-            padding: 30px;
+            background: white; width: 100%; border-top-left-radius: 40px; border-top-right-radius: 40px;
+            padding: 35px 25px 50px; animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
         input {
-            width: 100%;
-            padding: 15px;
-            margin-bottom: 15px;
-            border-radius: 15px;
-            border: 1px solid #eee;
-            background: #f9f9f9;
-            box-sizing: border-box;
-            outline: none;
+            width: 100%; padding: 18px; margin-bottom: 15px; border-radius: 20px;
+            border: 1px solid #e2e8f0; background: #f8fafc; font-size: 16px; font-weight: 600;
+            box-sizing: border-box; outline: none; transition: 0.3s;
         }
-        .btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .btn-save { padding: 15px; border: none; border-radius: 15px; color: white; font-weight: bold; }
+        input:focus { border-color: var(--primary); background: white; }
+
+        .btn-action {
+            padding: 18px; border: none; border-radius: 20px; color: white;
+            font-size: 16px; font-weight: 800; transition: 0.2s;
+        }
+        .btn-action:active { opacity: 0.8; transform: scale(0.98); }
+
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
-<body style="padding-bottom: 100px;">
+<body>
 
     <div class="header">
-        <h1>Gestion<span style="color: #fbbf24;">Ko</span></h1>
-        <div class="solde-label">Vola any am-pofoana</div>
-        <div class="balance" id="totalBal">0 Ar</div>
+        <h1>Gestion<span style="color: var(--secondary);">Ko</span></h1>
+        <div class="balance-card">
+            <div class="balance-label">Solde Total</div>
+            <div class="balance-amount" id="totalBal">0 Ar</div>
+        </div>
         
-        <div class="summary-grid">
-            <div class="summary-box">
-                <div style="font-size: 10px; opacity: 0.7;">MIDITRA</div>
-                <div id="totalIn" class="text-green">0 Ar</div>
+        <div class="summary-row">
+            <div class="summary-item">
+                <div style="font-size: 10px; opacity: 0.8; margin-bottom: 5px;">MIDITRA</div>
+                <div id="totalIn" style="font-weight: 800; color: #4ade80; font-size: 18px;">0 Ar</div>
             </div>
-            <div class="summary-box">
-                <div style="font-size: 10px; opacity: 0.7;">MIVOAKA</div>
-                <div id="totalOut" class="text-red">0 Ar</div>
+            <div class="summary-item">
+                <div style="font-size: 10px; opacity: 0.8; margin-bottom: 5px;">MIVOAKA</div>
+                <div id="totalOut" style="font-weight: 800; color: #f87171; font-size: 18px;">0 Ar</div>
             </div>
         </div>
     </div>
 
-    <div class="container">
+    <div class="main-container">
         <div id="home">
-            <div class="card" style="text-align: center;">
-                <div class="chart-container">
+            <div class="glass-card">
+                <div class="chart-box">
                     <canvas id="cercleChart"></canvas>
-                    <div class="perc-label" id="percDisplay">0%</div>
+                    <div class="chart-center">
+                        <div class="perc-val" id="percDisplay">0%</div>
+                        <div style="font-size: 8px; color: #94a3b8; font-weight: 700;">STABLE</div>
+                    </div>
                 </div>
             </div>
-            <h3 style="font-size: 16px; margin: 20px 0 10px 5px;">Transactions</h3>
-            <div id="list" class="card" style="padding: 0;"></div>
+
+            <div class="list-header">
+                <h3>Transactions</h3>
+                <span style="font-size: 12px; color: var(--primary); font-weight: 700;">Vao haingana</span>
+            </div>
+            <div id="list"></div>
         </div>
 
         <div id="history" style="display: none;">
-            <div class="card">
-                <label style="font-size: 12px; color: #888;">Hitady daty:</label>
-                <input type="date" id="searchDate" oninput="render()" style="margin-top: 5px;">
+            <div class="glass-card" style="padding: 15px;">
+                <input type="date" id="searchDate" oninput="render()" style="margin-bottom: 0;">
             </div>
-            <div id="histList" class="card" style="padding: 0;"></div>
+            <div id="histList"></div>
         </div>
     </div>
 
-    <div style="text-align: center; color: #ccc; font-size: 11px; margin-top: 20px;">
-        CREATION BY MAHAITIA
-    </div>
-
-    <div class="navbar">
-        <div class="nav-item nav-active" id="btn-home" onclick="tab('home')">
-            <div style="font-size: 20px;">🏠</div>
-            HOME
+    <div class="bottom-bar">
+        <div class="nav-btn active" id="btn-home" onclick="tab('home')">
+            <i>🏠</i>HOME
         </div>
-        <button class="btn-plus" onclick="toggleModal()">+</button>
-        <div class="nav-item" id="btn-hist" onclick="tab('history')">
-            <div style="font-size: 20px;">📊</div>
-            HISTORY
+        <button class="fab-add" onclick="toggleModal()">+</button>
+        <div class="nav-btn" id="btn-hist" onclick="tab('history')">
+            <i>📊</i>HISTORY
         </div>
     </div>
 
-    <div class="modal" id="modal">
+    <div class="modal" id="modal" onclick="if(event.target==this)toggleModal()">
         <div class="modal-content">
-            <h2 style="margin-top: 0;">Hampiditra</h2>
-            <input type="text" id="desc" placeholder="Inona ity? (ohatra: Karama)">
-            <input type="number" id="amt" placeholder="Vola firy? (Ar)">
-            <div class="btn-group">
-                <button class="btn-save" style="background: #22c55e;" onclick="add('in')">MIDITRA</button>
-                <button class="btn-save" style="background: #ef4444;" onclick="add('out')">MIVOAKA</button>
+            <div style="width: 40px; height: 5px; background: #e2e8f0; border-radius: 10px; margin: -15px auto 25px;"></div>
+            <h2 style="margin: 0 0 25px 0; font-weight: 900; font-size: 24px;">Hampiditra vola</h2>
+            <input type="text" id="desc" placeholder="Antsipiriany (ohatra: Karama)">
+            <input type="number" id="amt" placeholder="Vola (Ar)" inputmode="numeric">
+            <div class="summary-row">
+                <button class="btn-action" style="background: var(--success);" onclick="add('in')">MIDITRA</button>
+                <button class="btn-action" style="background: var(--danger);" onclick="add('out')">MIVOAKA</button>
             </div>
-            <button onclick="toggleModal()" style="width: 100%; background: none; border: none; margin-top: 15px; color: #999;">HIVERINA</button>
         </div>
     </div>
 
     <script>
-        let data = JSON.parse(localStorage.getItem('gko_data')) || [];
+        let data = JSON.parse(localStorage.getItem('gko_pro_db')) || [];
         let chart = null;
 
         function tab(t) {
             document.getElementById('home').style.display = t === 'home' ? 'block' : 'none';
             document.getElementById('history').style.display = t === 'history' ? 'block' : 'none';
-            document.getElementById('btn-home').classList.toggle('nav-active', t === 'home');
-            document.getElementById('btn-hist').classList.toggle('nav-active', t === 'history');
+            document.getElementById('btn-home').classList.toggle('active', t === 'home');
+            document.getElementById('btn-hist').classList.toggle('active', t === 'history');
             render();
         }
 
@@ -246,7 +251,7 @@
         function add(type) {
             let d = document.getElementById('desc').value;
             let a = document.getElementById('amt').value;
-            if(!d || !a) return alert('Fenoy ny banga!');
+            if(!d || !a) return;
             
             data.unshift({
                 id: Date.now(),
@@ -256,7 +261,7 @@
                 date: new Date().toISOString().split('T')[0],
                 label: new Date().toLocaleDateString('mg-MG', {day:'2-digit', month:'short'})
             });
-            localStorage.setItem('gko_data', JSON.stringify(data));
+            localStorage.setItem('gko_pro_db', JSON.stringify(data));
             document.getElementById('desc').value = '';
             document.getElementById('amt').value = '';
             toggleModal();
@@ -264,9 +269,9 @@
         }
 
         function remove(id) {
-            if(confirm('Hofafana?')) {
+            if(confirm('Hofafana ity transaction ity?')) {
                 data = data.filter(x => x.id !== id);
-                localStorage.setItem('gko_data', JSON.stringify(data));
+                localStorage.setItem('gko_pro_db', JSON.stringify(data));
                 render();
             }
         }
@@ -283,23 +288,23 @@
                 if(isIn) ti += x.amt; else to += x.amt;
 
                 let html = `
-                    <div class="item">
-                        <div class="item-info">
-                            <div class="icon-box" style="background: ${isIn?'#f0fdf4':'#fef2f2'}; color: ${isIn?'#22c55e':'#ef4444'};">
-                                ${isIn?'+':'-'}
+                    <div class="transaction-item">
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <div class="icon-circle" style="background: ${isIn?'#ecfdf5':'#fef2f2'}; color: ${isIn?'#10b981':'#ef4444'};">
+                                ${isIn?'↓':'↑'}
                             </div>
                             <div>
-                                <div style="font-weight: bold; font-size: 14px;">${x.desc}</div>
-                                <div style="font-size: 10px; color: #aaa;">${x.label}</div>
+                                <div style="font-weight: 700; font-size: 15px;">${x.desc}</div>
+                                <div style="font-size: 11px; color: #94a3b8; font-weight: 600; margin-top: 2px;">${x.label}</div>
                             </div>
                         </div>
-                        <div style="text-align: right; display: flex; align-items: center; gap: 10px;">
-                            <div style="font-weight: 900; color: ${isIn?'#22c55e':'#ef4444'}; font-size: 14px;">${x.amt.toLocaleString()}</div>
-                            <span onclick="remove(${x.id})" style="color: #ddd; font-size: 12px;">X</span>
+                        <div style="text-align: right; display: flex; align-items: center; gap: 12px;">
+                            <div style="font-weight: 900; color: ${isIn?'#10b981':'#ef4444'}; font-size: 16px;">${isIn?'+':'-'} ${x.amt.toLocaleString()}</div>
+                            <div onclick="remove(${x.id})" style="color: #e2e8f0; font-size: 18px;">×</div>
                         </div>
                     </div>
                 `;
-                if(i < 6) l.innerHTML += html;
+                if(i < 8) l.innerHTML += html;
                 if(!sd || x.date === sd) hl.innerHTML += html;
             });
 
@@ -321,15 +326,21 @@
                 data: {
                     datasets: [{
                         data: [ti || 1, to || 0.0001],
-                        backgroundColor: ['#22c55e', '#ef4444'],
-                        borderWidth: 0
+                        backgroundColor: ['#10b981', '#ef4444'],
+                        borderWidth: 0,
+                        borderRadius: 15,
+                        hoverOffset: 4
                     }]
                 },
-                options: { cutout: '80%', animation: { duration: 600 } }
+                options: { 
+                    cutout: '82%', 
+                    animation: { duration: 1000, easing: 'easeOutQuart' },
+                    plugins: { legend: { display: false } }
+                }
             });
         }
 
-        render();
+        window.onload = render;
     </script>
 </body>
 </html>
