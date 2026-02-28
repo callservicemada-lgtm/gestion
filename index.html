@@ -2,234 +2,259 @@
 <html lang="mg">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GestionKo Ultimate Pro</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Gestionako by Mahaitia</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            --primary: #0f172a;
-            --accent: #fbbf24;
-            --success: #10b981;
-            --danger: #ef4444;
-            --card-white: #ffffff;
-            --text-main: #1e293b;
+            --bg: #020617;
+            --card: #0f172a;
+            --manga: #38bdf8;
+            --mavo: #fbbf24;
+            --fotsy: #ffffff;
         }
-
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Segoe UI', system-ui, sans-serif; }
 
         body {
-            background-color: var(--primary);
-            margin: 0; padding: 0; color: #f8fafc;
-            height: 100vh; overflow: hidden;
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg);
+            color: var(--fotsy);
+            margin: 0; padding: 15px;
+            display: flex; flex-direction: column; align-items: center;
+            overflow-x: hidden;
         }
 
-        .app-container { display: flex; flex-direction: column; height: 100vh; }
-
-        /* --- HEADER SECTION --- */
-        .header {
-            padding: 40px 25px 20px;
+        /* HEADER & SIGNATURE STYLER */
+        .header-section {
             text-align: center;
-        }
-        .logo { font-size: 26px; font-weight: 900; letter-spacing: -1px; margin-bottom: 10px; }
-        .logo span { color: var(--accent); }
-        .balance-box { margin-bottom: 15px; }
-        .balance-label { font-size: 10px; color: #94a3b8; letter-spacing: 2px; }
-        .balance-value { font-size: 44px; font-weight: 800; margin: 5px 0; color: white; }
-
-        /* --- MAIN CONTENT (WHITE SHEET) --- */
-        .content-sheet {
-            background: #f1f5f9; color: var(--text-main);
-            flex: 1; border-top-left-radius: 45px; border-top-right-radius: 45px;
-            padding: 25px; overflow-y: auto; box-shadow: 0 -15px 35px rgba(0,0,0,0.3);
+            margin-top: 10px;
+            margin-bottom: 25px;
+            animation: fadeInDown 1s ease;
         }
 
-        /* --- SEPARATE DASHBOARDS --- */
-        .dash-card {
-            background: var(--card-white);
-            border-radius: 30px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-        }
-        .dash-title {
-            font-size: 12px; font-weight: 800; color: var(--primary);
-            margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px;
-            display: flex; align-items: center; gap: 8px;
+        .logo-main {
+            font-size: 3.5rem;
+            margin-bottom: -10px;
+            filter: drop-shadow(0 0 15px rgba(56, 189, 248, 0.4));
         }
 
-        .chart-container { width: 100%; height: 160px; position: relative; }
-        
-        /* Stats row inside circles */
-        .stats-row { display: flex; justify-content: space-around; margin-top: 15px; text-align: center; }
-        .stat-val { font-weight: 800; font-size: 16px; display: block; }
-        .stat-lab { font-size: 9px; color: #64748b; }
-
-        /* --- HISTORY LIST --- */
-        .search-bar {
-            background: white; border-radius: 18px; padding: 15px 20px;
-            margin-bottom: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.02);
-        }
-        .search-bar input { border: none; outline: none; width: 100%; font-size: 15px; }
-
-        .tx-list { margin-bottom: 80px; }
-        .tx-item {
-            background: white; margin-bottom: 10px; padding: 15px;
-            border-radius: 20px; display: flex; justify-content: space-between; align-items: center;
-        }
-        .tx-info b { display: block; font-size: 15px; color: var(--primary); }
-        .tx-info small { color: #94a3b8; font-size: 11px; font-weight: 600; }
-
-        /* --- BUTTONS --- */
-        .fab {
-            position: fixed; bottom: 30px; right: 25px;
-            width: 70px; height: 70px; background: var(--accent);
-            border-radius: 22px; border: none; font-size: 35px; color: var(--primary);
-            box-shadow: 0 12px 25px rgba(251, 191, 36, 0.4); z-index: 100;
+        .app-title {
+            font-size: 2.2rem;
+            font-weight: 900;
+            letter-spacing: 3px;
+            text-transform: uppercase;
         }
 
-        /* Modal */
-        .overlay {
-            display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.8);
-            backdrop-filter: blur(12px); z-index: 2000; align-items: center; justify-content: center; padding: 25px;
+        .mahaitia-signature {
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 4px;
+            color: var(--mavo);
+            margin-top: 5px;
+            text-transform: uppercase;
+            animation: glowMahaitia 2s infinite alternate;
         }
-        .modal {
-            background: white; width: 100%; border-radius: 35px; padding: 35px;
-            animation: slideUp 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-        }
-        @keyframes slideUp { from { transform: translateY(60px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        
-        .modal input {
-            width: 100%; padding: 18px; margin-bottom: 12px; border-radius: 15px;
-            border: 1px solid #e2e8f0; background: #f8fafc; font-size: 16px; outline: none;
-        }
-        .btn-m { width: 100%; padding: 18px; border-radius: 15px; border: none; font-weight: 800; font-size: 16px; margin-top: 10px; }
 
+        @keyframes glowMahaitia {
+            from { text-shadow: 0 0 2px var(--mavo); opacity: 0.8; }
+            to { text-shadow: 0 0 15px var(--manga), 0 0 20px var(--mavo); opacity: 1; }
+        }
+
+        /* DASHBOARD - ADAPTIVE ECRAN */
+        .dashboard {
+            width: 100%; max-width: 380px;
+            background: linear-gradient(160deg, var(--card) 0%, #1e293b 100%);
+            border-radius: 35px; padding: 25px;
+            text-align: center; margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
+
+        .chart-box {
+            position: relative;
+            width: 190px; height: 190px;
+            margin: 0 auto 20px;
+        }
+
+        .chart-center {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .chart-center h1 { font-size: 2rem; margin: 0; color: var(--fotsy); }
+
+        /* STATS GRID */
+        .stats-container {
+            display: flex; justify-content: space-around;
+            padding: 15px; background: rgba(0,0,0,0.2);
+            border-radius: 20px; margin-top: 15px;
+        }
+        .stat-label { font-size: 0.65rem; opacity: 0.6; display: block; margin-bottom: 4px; }
+        .stat-val { font-weight: 800; font-size: 1rem; }
+
+        /* FORM STYLER */
+        .form-box {
+            width: 100%; max-width: 380px;
+            background: var(--card); padding: 20px;
+            border-radius: 25px; margin-bottom: 25px;
+        }
+
+        input, select {
+            width: 100%; background: #1e293b; border: 1px solid rgba(255,255,255,0.1);
+            padding: 14px; border-radius: 12px; color: white;
+            margin-bottom: 12px; outline: none; font-size: 1rem;
+        }
+
+        .btn-mahaitia {
+            width: 100%; 
+            background: linear-gradient(90deg, var(--manga) 0%, var(--mavo) 100%);
+            color: #020617; border: none; padding: 16px;
+            border-radius: 15px; font-weight: 900; font-size: 1rem;
+            cursor: pointer; transition: 0.3s;
+        }
+        .btn-mahaitia:active { transform: scale(0.96); }
+
+        /* HISTORY LIST */
+        .history { width: 100%; max-width: 380px; }
+        .item {
+            background: var(--card); padding: 15px; border-radius: 18px;
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 10px; border-right: 4px solid var(--manga);
+            animation: slideUp 0.4s ease-out;
+        }
+        .item.out { border-right-color: var(--mavo); }
+
+        @keyframes fadeInDown { from {opacity: 0; transform: translateY(-20px);} to {opacity: 1; transform: translateY(0);} }
+        @keyframes slideUp { from {opacity: 0; transform: translateY(20px);} to {opacity: 1; transform: translateY(0);} }
+
+        .btn-del { background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; color: #ef4444; padding: 6px 10px; border-radius: 10px; font-size: 0.8rem; }
     </style>
 </head>
 <body>
 
-<div class="app-container">
-    <div class="header">
-        <div class="logo">Gestion<span>Ko</span></div>
-        <div class="balance-box">
-            <div class="balance-label">Vola Ananana (Balance)</div>
-            <div class="balance-value" id="totalBal">0 Ar</div>
+    <div class="header-section">
+        <div class="logo-main">💎</div>
+        <div class="app-title">
+            <span style="color:var(--manga)">GESTIO</span><span style="color:var(--mavo)">NAKO</span>
         </div>
+        <div class="mahaitia-signature">Creation by Mahaitia</div>
     </div>
 
-    <div class="content-sheet">
-        <div class="dash-card">
-            <div class="dash-title">📊 Pourcentage des Flux</div>
-            <div class="chart-container">
-                <canvas id="circleChart"></canvas>
-                <div id="percDisplay" style="position: absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-weight: 900; font-size: 24px; color: var(--primary);">0%</div>
-            </div>
-            <div class="stats-row">
-                <div><span class="stat-lab">MIDITRA</span><span class="stat-val" id="stIn" style="color: var(--success);">0</span></div>
-                <div><span class="stat-lab">MIVOAKA</span><span class="stat-val" id="stOut" style="color: var(--danger);">0</span></div>
+    <div class="dashboard">
+        <div class="chart-box">
+            <canvas id="myChart"></canvas>
+            <div class="chart-center">
+                <h1 id="pct">0%</h1>
+                <small style="opacity:0.5; font-size: 0.6rem;">SISA</small>
             </div>
         </div>
 
-        <div class="dash-card">
-            <div class="dash-title">📈 Fréquence des Mouvements</div>
-            <div class="chart-container" style="height: 200px;">
-                <canvas id="barChart"></canvas>
+        <div style="margin-bottom: 20px;">
+            <div id="balance" style="font-size: 2.2rem; font-weight: 900;">0 Ar</div>
+            <small style="opacity: 0.4; letter-spacing: 1px;">TOTAL BALANCE</small>
+        </div>
+
+        <div class="stats-container">
+            <div>
+                <small class="stat-label">MIDITRA</small>
+                <span class="stat-val" style="color:var(--manga)" id="tin">+0</span>
+            </div>
+            <div>
+                <small class="stat-label">MIVOAKA</small>
+                <span class="stat-val" style="color:var(--mavo)" id="tout">-0</span>
             </div>
         </div>
-
-        <div class="search-bar">
-            <input type="text" id="srch" placeholder="Hitady transaction..." oninput="render()">
-        </div>
-
-        <div class="tx-list" id="txList"></div>
-        
-        <button onclick="clearDb()" style="width:100%; color:#94a3b8; border:none; background:none; font-size:11px; margin-bottom: 40px;">HAMAFA NY TANTARA REHETRA ×</button>
     </div>
-</div>
 
-<button class="fab" onclick="modal(true)">+</button>
-
-<div class="overlay" id="ovl" onclick="if(event.target==this)modal(false)">
-    <div class="modal">
-        <h2 style="margin-top:0; font-weight: 900;">Transaction</h2>
-        <input type="text" id="inD" placeholder="Anarany (ohatra: Karama)">
-        <input type="text" id="inC" placeholder="Sokajy (ohatra: Sakafo)">
-        <input type="number" id="inA" placeholder="Vola (Ar)" inputmode="numeric">
-        <button onclick="save('in')" class="btn-m" style="background: var(--primary); color: white;">MIDITRA</button>
-        <button onclick="save('out')" class="btn-m" style="background: var(--accent); color: var(--primary);">MIVOAKA</button>
+    <div class="form-box">
+        <input type="text" id="name" placeholder="Inona no natao?">
+        <input type="number" id="price" placeholder="Vola (Ar)">
+        <select id="type">
+            <option value="in">Vola Miditra (+)</option>
+            <option value="out" selected>Vola Mivoaka (-)</option>
+        </select>
+        <button class="btn-mahaitia" onclick="addData()">HAMPIDITRA 🚀</button>
     </div>
-</div>
 
-<script>
-    let db = JSON.parse(localStorage.getItem('gko_ultimate_v4')) || [];
-    let chartC = null, chartB = null;
+    <div class="history" id="history"></div>
 
-    function modal(s) { document.getElementById('ovl').style.display = s ? 'flex' : 'none'; }
+    <script>
+        let data = [];
+        let chart;
 
-    function save(t) {
-        const d = document.getElementById('inD').value, c = document.getElementById('inC').value || 'Hafa', a = document.getElementById('inA').value;
-        if(!d || !a) return;
-        db.unshift({ id: Date.now(), d, c, a: parseFloat(a), t, dt: new Date().toLocaleDateString('mg-MG', {day:'2-digit', month:'short'}) });
-        localStorage.setItem('gko_ultimate_v4', JSON.stringify(db));
-        document.getElementById('inD').value=''; document.getElementById('inC').value=''; document.getElementById('inA').value='';
-        modal(false); render();
-    }
+        function addData() {
+            const name = document.getElementById('name').value;
+            const price = parseFloat(document.getElementById('price').value);
+            const type = document.getElementById('type').value;
 
-    function del(id) { if(confirm("Hofafana ity?")) { db = db.filter(x => x.id !== id); localStorage.setItem('gko_ultimate_v4', JSON.stringify(db)); render(); } }
-    function clearDb() { if(confirm("Hamafana ny tantara rehetra?")) { db = []; localStorage.setItem('gko_ultimate_v4', JSON.stringify(db)); render(); } }
+            if(!name || isNaN(price)) return;
 
-    function render() {
-        const list = document.getElementById('txList'), q = document.getElementById('srch').value.toLowerCase();
-        list.innerHTML = '';
-        let tin = 0, tout = 0;
+            data.push({ name, price, type });
+            document.getElementById('name').value = '';
+            document.getElementById('price').value = '';
+            update();
+        }
 
-        db.forEach(item => {
-            const isIn = item.t === 'in';
-            if(isIn) tin += item.a; else tout += item.a;
-            if(item.d.toLowerCase().includes(q) || item.c.toLowerCase().includes(q)) {
-                list.innerHTML += `
-                    <div class="tx-item" onclick="del(${item.id})">
-                        <div class="tx-info">
-                            <b>${item.d}</b>
-                            <small>${item.c} • ${item.dt}</small>
-                        </div>
-                        <div style="font-weight: 800; color: ${isIn ? 'var(--success)' : 'var(--danger)'}">
-                            ${isIn ? '+' : '-'} ${item.a.toLocaleString()}
-                        </div>
-                    </div>`;
-            }
-        });
+        function deleteData(index) {
+            data.splice(index, 1);
+            update();
+        }
 
-        document.getElementById('totalBal').innerText = (tin - tout).toLocaleString() + " Ar";
-        document.getElementById('stIn').innerText = tin.toLocaleString();
-        document.getElementById('stOut').innerText = tout.toLocaleString();
-        document.getElementById('percDisplay').innerText = (tin+tout)>0 ? Math.round((tin/(tin+tout))*100)+"%" : "0%";
-        updateCharts(tin, tout);
-    }
+        function update() {
+            const hist = document.getElementById('history');
+            hist.innerHTML = '';
+            let tIn = 0, tOut = 0;
 
-    function updateCharts(tin, tout) {
-        const ctxC = document.getElementById('circleChart').getContext('2d');
-        if(chartC) chartC.destroy();
-        chartC = new Chart(ctxC, {
-            type: 'doughnut',
-            data: { datasets: [{ data: [tin || 1, tout || 0.001], backgroundColor: ['#10b981', '#ef4444'], borderWidth: 0 }] },
-            options: { cutout: '85%', plugins: { legend: { display: false } } }
-        });
+            data.forEach((item, i) => {
+                if(item.type === 'in') tIn += item.price;
+                else tOut += item.price;
 
-        const ctxB = document.getElementById('barChart').getContext('2d');
-        if(chartB) chartB.destroy();
-        chartB = new Chart(ctxB, {
-            type: 'bar',
-            data: { labels: ['Miditra', 'Mivoaka'], datasets: [{ data: [tin, tout], backgroundColor: ['#10b981', '#fbbf24'], borderRadius: 15 }] },
-            options: { 
-                responsive: true, maintainAspectRatio: false,
-                plugins: { legend: { display: false } }, 
-                scales: { y: { display: false }, x: { grid: { display: false }, border: { display: false } } } 
-            }
-        });
-    }
+                const div = document.createElement('div');
+                div.className = `item ${item.type === 'out' ? 'out' : ''}`;
+                div.innerHTML = `
+                    <div>
+                        <b style="color:${item.type==='in' ? 'var(--manga)' : 'var(--mavo)'}">${item.name}</b><br>
+                        <small style="opacity:0.5">${item.price.toLocaleString()} Ar</small>
+                    </div>
+                    <button class="btn-del" onclick="deleteData(${i})">Fafana</button>
+                `;
+                hist.prepend(div);
+            });
 
-    window.onload = render;
-</script>
+            const bal = tIn - tOut;
+            const pct = tIn > 0 ? Math.max(0, Math.round(((tIn - tOut) / tIn) * 100)) : 0;
+
+            document.getElementById('balance').innerText = bal.toLocaleString() + ' Ar';
+            document.getElementById('tin').innerText = '+' + tIn.toLocaleString();
+            document.getElementById('tout').innerText = '-' + tOut.toLocaleString();
+            document.getElementById('pct').innerText = pct + '%';
+
+            updateChart(tIn, tOut);
+        }
+
+        function updateChart(tin, tout) {
+            const ctx = document.getElementById('myChart').getContext('2d');
+            const sisa = Math.max(0, tin - tout);
+            if(chart) chart.destroy();
+            chart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    datasets: [{
+                        data: [sisa, tout],
+                        backgroundColor: ['#38bdf8', '#fbbf24'],
+                        borderWidth: 0,
+                        cutout: '82%',
+                        borderRadius: 15
+                    }]
+                },
+                options: {
+                    plugins: { legend: { display: false } },
+                    animation: { duration: 1500, easing: 'easeOutQuart' }
+                }
+            });
+        }
+        update();
+    </script>
 </body>
 </html>
