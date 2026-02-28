@@ -180,7 +180,8 @@
     <div class="history" id="history"></div>
 
     <script>
-        let data = [];
+        // Nampiana localStorage eto mba tsy ho very ny data
+        let data = JSON.parse(localStorage.getItem('mahaitia_data')) || [];
         let chart;
 
         function addData() {
@@ -193,11 +194,18 @@
             data.push({ name, price, type });
             document.getElementById('name').value = '';
             document.getElementById('price').value = '';
-            update();
+            
+            saveAndRefresh();
         }
 
         function deleteData(index) {
             data.splice(index, 1);
+            saveAndRefresh();
+        }
+
+        // Fampidirana ny data ao amin'ny fitadidiana (Storage)
+        function saveAndRefresh() {
+            localStorage.setItem('mahaitia_data', JSON.stringify(data));
             update();
         }
 
@@ -254,6 +262,8 @@
                 }
             });
         }
+
+        // Alefa avy hatrany rehefa misokatra ny app
         update();
     </script>
 </body>
